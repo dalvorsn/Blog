@@ -8,10 +8,13 @@ namespace Blog.Models.Blog.Postagem
 {
     public class PostagemEntity
     {
-        public string Titulo;
-        public AutorEntity Autor;
-        public CategoriaEntity Categoria;
-        public List<EtiquetaEntity> Etiquetas;
-        public List<RevisaoEntity> Revisoes;
+        public int Id { get; set; }
+        public string Titulo { get; set; }
+        public int AutorId { get; set; }
+        public int CategoriaId { get; set; }
+        public virtual AutorEntity Autor { get; set; }
+        public virtual CategoriaEntity Categoria { get; set; }
+        public virtual ICollection<EtiquetaEntity> Etiquetas { get; set; }
+        public virtual ICollection<RevisaoEntity> Revisoes { get; set; }
     }
 }

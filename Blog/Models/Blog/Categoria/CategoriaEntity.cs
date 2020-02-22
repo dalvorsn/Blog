@@ -2,6 +2,7 @@
 {
     public class CategoriaEntity
     {
-        public string Nome;
+        public int Id { get; set; }
+        public string Nome { get; set; }
     }
 }
