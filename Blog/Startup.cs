@@ -17,6 +17,8 @@ namespace Blog
             db.Database.EnsureDeleted();
             // create database if not exist
             db.Database.EnsureCreated();
+
+            db.CreateFakeData();
         }
 
         public IConfiguration Configuration { get; }

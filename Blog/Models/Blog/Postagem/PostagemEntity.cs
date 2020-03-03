@@ -1,7 +1,7 @@
 ﻿using Blog.Models.Blog.Autor;
 using Blog.Models.Blog.Categoria;
-using Blog.Models.Blog.Etiqueta;
 using Blog.Models.Blog.Postagem.Revisao;
+using Blog.Models.Blog.PostagemEtiqueta;
 using System.Collections.Generic;
 
 namespace Blog.Models.Blog.Postagem
@@ -14,7 +14,7 @@ namespace Blog.Models.Blog.Postagem
         public int CategoriaId { get; set; }
         public virtual AutorEntity Autor { get; set; }
         public virtual CategoriaEntity Categoria { get; set; }
-        public virtual ICollection<EtiquetaEntity> Etiquetas { get; set; }
+        public virtual ICollection<PostagemEtiquetaEntity> PostagemEtiquetas { get; set; }
         public virtual ICollection<RevisaoEntity> Revisoes { get; set; }
     }
 }
