@@ -1,4 +1,4 @@
-﻿using Blog.Models.Blog.PostagemEtiqueta;
+﻿using Blog.Models.Blog.Postagem;
 using System;
 using System.Collections.Generic;
 

@@ -4,7 +4,6 @@ using Blog.Models.Blog.Etiqueta;
 using Blog.Models.Blog.Postagem;
 using Blog.Models.Blog.Postagem.Revisao;
 using Blog.Models.Blog.Postagem.Revisao.Classificacao;
-using Blog.Models.Blog.PostagemEtiqueta;
 using Microsoft.EntityFrameworkCore;
 using System;
 

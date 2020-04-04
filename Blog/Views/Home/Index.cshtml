@@ -36,13 +36,13 @@
         </ul>
 
         <br />
-        <h4 class="text-center">Recent Comments</h4>
+        <h4 class="text-center">Most Popular Posts</h4>
         <ul class="list-group list-group-flush">
-            <!-- TODO: listagem dinamica -->
-            <li class="list-group-item"><a href="#">React - <em>john</em></a></li>
-            <li class="list-group-item"><a href="#">Wow.. what you said is really true! I'm an aries though - <em>Anto</em></a></li>
-            <li class="list-group-item"><a href="#">Does capricorn and aries is compatibile? - <em>Sarah</em></a></li>
-            <li class="list-group-item"><a href="#">I'm a cancer woman been in love with Leo. Will this work? - <em>Mary</em></a></li>
+            <!-- TODO: adicionar link para postagem -->
+            @foreach(PostagemMostPopularHomeIndex postagem in @Model.PopularPosts)
+            {
+                <li class="list-group-item"><a href="#">@postagem.Titulo - <em>@postagem.Autor.Nome</em></a></li>
+            }
         </ul>
     </div>
 </div>

@@ -3,40 +3,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Blog.Models;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using Blog.ViewMoldels.Home;
+using Blog.Models.Blog.Categoria;
+using Blog.Models.Blog.Postagem;
 
 namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly CategoriaOrmService _categoriaOrmService;
+        private readonly PostagemOrmService _postagemOrmService;
 
-        public HomeController(ILogger<HomeController> logger)
-        {
+        public HomeController(
+            ILogger<HomeController> logger,
+            CategoriaOrmService categoriaOrmService,
+            PostagemOrmService postagemOrmService
+        ){
             _logger = logger;
+            _categoriaOrmService = categoriaOrmService;
+            _postagemOrmService = postagemOrmService;
         }
 
         public IActionResult Index()
         {
-            var db = new Database();
-            var posts = db.Postagems
-                .Include(c => c.Categoria)
-                .Include(r => r.Revisoes)
-                .Include(a => a.Autor)
-                .Select( p => new
-                {
-                    p,
-                    Revisoes = p.Revisoes.OrderByDescending( r => r.Versao ).Last()
-                })
-                .AsEnumerable()
-                .Select(e => e.p)
-                .ToList();
-
             HomeIndexViewModel model = new HomeIndexViewModel();
-            foreach(var post in posts)
+            foreach(var post in _postagemOrmService.GetAll())
             {
                 var postagem = new PostagemHomeIndex();
                 postagem.Titulo = post.Titulo;
@@ -52,6 +44,16 @@ namespace Blog.Controllers
                     model.Postagens.Add(postagem);
                 }
             }
+
+            foreach(var post in _postagemOrmService.GetMostPopular())
+            {
+                var postagem = new PostagemMostPopularHomeIndex();
+                postagem.Titulo = post.Titulo;
+                postagem.Autor = post.Autor;
+
+                model.PopularPosts.Add(postagem);
+            }
+
 
             return View(model);
         }

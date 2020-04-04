@@ -7,9 +7,12 @@ namespace Blog.ViewMoldels.Home
     public class HomeIndexViewModel
     {
         public ICollection<PostagemHomeIndex> Postagens { get; set; }
+        public ICollection<PostagemMostPopularHomeIndex> PopularPosts { get; set; }
+        
 
         public HomeIndexViewModel() {
             Postagens = new List<PostagemHomeIndex>();
+            PopularPosts = new List<PostagemMostPopularHomeIndex>();
         }
     }
 
@@ -35,6 +38,12 @@ namespace Blog.ViewMoldels.Home
                 }
             }
         }
+    }
 
+    public class PostagemMostPopularHomeIndex
+    {
+        public int Id { get; set; }
+        public string Titulo { get; set; }
+        public AutorEntity Autor { get; set; }
     }
 }

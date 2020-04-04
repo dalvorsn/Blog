@@ -1,7 +1,6 @@
 ﻿using Blog.Models.Blog.Etiqueta;
-using Blog.Models.Blog.Postagem;
 
-namespace Blog.Models.Blog.PostagemEtiqueta
+namespace Blog.Models.Blog.Postagem
 {
     public class PostagemEtiquetaEntity
     {

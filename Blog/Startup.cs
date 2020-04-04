@@ -1,3 +1,7 @@
+using Blog.Models.Blog.Autor;
+using Blog.Models.Blog.Categoria;
+using Blog.Models.Blog.Etiqueta;
+using Blog.Models.Blog.Postagem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,14 +15,6 @@ namespace Blog
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            var db = new Database();
-            // delete database
-            //db.Database.EnsureDeleted();
-            // create database if not exist
-            db.Database.EnsureCreated();
-
-            //db.CreateFakeData();
         }
 
         public IConfiguration Configuration { get; }
@@ -27,6 +23,22 @@ namespace Blog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            using ( var database = new Database())
+            {
+                //database.Database.EnsureDeleted();
+                
+                database.Database.EnsureCreated();
+                //database.CreateFakeData();
+            }
+
+            services.AddDbContext<Database>();
+
+            services.AddTransient<CategoriaOrmService>();
+            services.AddTransient<PostagemOrmService>();
+            services.AddTransient<AutorOrmService>();
+            services.AddTransient<EtiquetaOrmService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
