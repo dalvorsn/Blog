@@ -22,9 +22,6 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Categoria" asp-action="Index">Categorias</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
@@ -34,29 +31,8 @@
     </header>
     <div class="container-fluid">
         <main role="main">
-            <div class="row">
-                <div class="col-9">
-                    @RenderBody()
-                </div>
-                <div class="col-3">
-                    <h4 class="text-center">Latest Posts</h4>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="#">Social Networks - <em>john</em></a></li>
-                        <li class="list-group-item"><a href="#">Android Apps - <em>Anto</em></a></li>
-                        <li class="list-group-item"><a href="#">Cloud Computing Services - <em>Sarah</em></a></li>
-                        <li class="list-group-item"><a href="#">BI, why is so important? - <em>Mary</em></a></li>
-                    </ul>
-
-                    <br />
-                    <h4 class="text-center">Recent Comments</h4>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="#">React - <em>john</em></a></li>
-                        <li class="list-group-item"><a href="#">Wow.. what you said is really true! I'm an aries though - <em>Anto</em></a></li>
-                        <li class="list-group-item"><a href="#">Does capricorn and aries is compatibile? - <em>Sarah</em></a></li>
-                        <li class="list-group-item"><a href="#">I'm a cancer woman been in love with Leo. Will this work? - <em>Mary</em></a></li>
-                    </ul>
-                </div>
-            </div>
+            @RenderBody()
+            
         </main>
     </div>
 

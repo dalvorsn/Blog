@@ -14,11 +14,11 @@ namespace Blog
 
             var db = new Database();
             // delete database
-            db.Database.EnsureDeleted();
+            //db.Database.EnsureDeleted();
             // create database if not exist
             db.Database.EnsureCreated();
 
-            db.CreateFakeData();
+            //db.CreateFakeData();
         }
 
         public IConfiguration Configuration { get; }

@@ -12,6 +12,7 @@ namespace Blog.Models.Blog.Postagem
         public string Titulo { get; set; }
         public int AutorId { get; set; }
         public int CategoriaId { get; set; }
+        public string UrlCapa { get; set; }
         public virtual AutorEntity Autor { get; set; }
         public virtual CategoriaEntity Categoria { get; set; }
         public virtual ICollection<PostagemEtiquetaEntity> PostagemEtiquetas { get; set; }

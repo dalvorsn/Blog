@@ -34,10 +34,12 @@ namespace Blog
         public void CreateFakeData()
         {
             // Autores
-            this.Autores.Add(new AutorEntity { Nome = "João Costa", FotoURL = "https://www.stf.jus.br/arquivo/cms/bancoImagemSco/bancoImagemSco_AP_344446.jpg" });
+            var autor = new AutorEntity { Nome = "João Costa", FotoURL = "https://www.stf.jus.br/arquivo/cms/bancoImagemSco/bancoImagemSco_AP_344446.jpg" };
+            this.Autores.Add(autor);
 
             // Categorias
-            this.Categorias.Add(new CategoriaEntity { Nome = "Programação" });
+            var categoria = new CategoriaEntity { Nome = "Programação" };
+            this.Categorias.Add(categoria);
             this.Categorias.Add(new CategoriaEntity { Nome = "Banco de Dados" });
             this.Categorias.Add(new CategoriaEntity { Nome = "Infraestrutura" });
 

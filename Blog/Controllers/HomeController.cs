@@ -2,6 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Blog.Models;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using Blog.ViewMoldels.Home;
 
 namespace Blog.Controllers
 {
@@ -16,7 +21,39 @@ namespace Blog.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var db = new Database();
+            var posts = db.Postagems
+                .Include(c => c.Categoria)
+                .Include(r => r.Revisoes)
+                .Include(a => a.Autor)
+                .Select( p => new
+                {
+                    p,
+                    Revisoes = p.Revisoes.OrderByDescending( r => r.Versao ).Last()
+                })
+                .AsEnumerable()
+                .Select(e => e.p)
+                .ToList();
+
+            HomeIndexViewModel model = new HomeIndexViewModel();
+            foreach(var post in posts)
+            {
+                var postagem = new PostagemHomeIndex();
+                postagem.Titulo = post.Titulo;
+                postagem.UrlCapa = post.UrlCapa;
+
+                var revisao = post.Revisoes.FirstOrDefault();
+                if(revisao != null)
+                {
+                    postagem.Id = revisao.Id;
+                    postagem.Texto = revisao.Texto;
+                    postagem.UltimaAtualizacao = revisao.Data;
+                    postagem.Autor = post.Autor;
+                    model.Postagens.Add(postagem);
+                }
+            }
+
+            return View(model);
         }
 
         public IActionResult Privacy()
