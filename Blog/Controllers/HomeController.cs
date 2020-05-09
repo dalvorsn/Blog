@@ -15,11 +15,8 @@ namespace Blog.Controllers
         private readonly CategoriaOrmService _categoriaOrmService;
         private readonly PostagemOrmService _postagemOrmService;
 
-        public HomeController(
-            ILogger<HomeController> logger,
-            CategoriaOrmService categoriaOrmService,
-            PostagemOrmService postagemOrmService
-        ){
+        public HomeController(ILogger<HomeController> logger, CategoriaOrmService categoriaOrmService, PostagemOrmService postagemOrmService )
+        {
             _logger = logger;
             _categoriaOrmService = categoriaOrmService;
             _postagemOrmService = postagemOrmService;
@@ -28,15 +25,13 @@ namespace Blog.Controllers
         public IActionResult Index()
         {
             HomeIndexViewModel model = new HomeIndexViewModel();
-            foreach(var post in _postagemOrmService.GetAll())
-            {
+            foreach(var post in _postagemOrmService.GetAll()) {
                 var postagem = new PostagemHomeIndex();
                 postagem.Titulo = post.Titulo;
                 postagem.UrlCapa = post.UrlCapa;
 
                 var revisao = post.Revisoes.FirstOrDefault();
-                if(revisao != null)
-                {
+                if(revisao != null) {
                     postagem.Id = revisao.Id;
                     postagem.Texto = revisao.Texto;
                     postagem.UltimaAtualizacao = revisao.Data;
@@ -45,8 +40,7 @@ namespace Blog.Controllers
                 }
             }
 
-            foreach(var post in _postagemOrmService.GetMostPopular())
-            {
+            foreach(var post in _postagemOrmService.GetMostPopular()) {
                 var postagem = new PostagemMostPopularHomeIndex();
                 postagem.Titulo = post.Titulo;
                 postagem.Autor = post.Autor;

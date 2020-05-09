@@ -4,12 +4,13 @@ using Blog.Models.Blog.Etiqueta;
 using Blog.Models.Blog.Postagem;
 using Blog.Models.Blog.Postagem.Revisao;
 using Blog.Models.Blog.Postagem.Revisao.Classificacao;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace Blog
 {
-    public class Database : DbContext
+    public class Database : IdentityDbContext
     {
         public DbSet<PostagemEntity> Postagems { get; set; }
         public DbSet<EtiquetaEntity> Etiquetas { get; set; }
@@ -27,6 +28,8 @@ namespace Blog
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<PostagemEtiquetaEntity>().HasKey(pe => new { pe.EtiquetaId, pe.PostagemId });
         }
 

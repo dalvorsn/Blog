@@ -2,6 +2,7 @@ using Blog.Models.Blog.Autor;
 using Blog.Models.Blog.Categoria;
 using Blog.Models.Blog.Etiqueta;
 using Blog.Models.Blog.Postagem;
+using Blog.Models.ControleAcesso;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,11 +27,16 @@ namespace Blog
 
             using ( var database = new Database())
             {
-                //database.Database.EnsureDeleted();
+                database.Database.EnsureDeleted();
                 
                 database.Database.EnsureCreated();
-                //database.CreateFakeData();
+                database.CreateFakeData();
             }
+
+            services.AddIdentity<Usuario, Papel>(options => {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 6;
+            }).AddEntityFrameworkStores<Database>();
 
             services.AddDbContext<Database>();
 
@@ -59,13 +65,35 @@ namespace Blog
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "admin.categorias",
+                    pattern: "{controller=AdminCategorias}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "admin.etiquetas",
+                    pattern: "{controller=AdminEtiqueta}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "admin.autor",
+                    pattern: "{controller=AdminAutorController}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "admin.postagem",
+                    pattern: "{controller=AdminPostagemController}/{action=Index}/{id?}"
+                );
             });
         }
     }
