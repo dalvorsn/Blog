@@ -1,1 +1,39 @@
-﻿AdminAutor index
+﻿@using Blog.ViewModels.Admin
+@model Blog.ViewModels.Admin.AdminAutoresListarViewModel
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Listagem de Autores</h3>
+    </div>
+    <div class="card-body">
+        <a class="btn btn-primary mb-3" href="/AdminAutor/Create">Criar novo autor</a>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>FotoURL</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (AdminAutoresAutor autor in @Model.Autores)
+                {
+                    <tr>
+                        <td>@autor.Id</td>
+                        <td>@autor.Nome</td>
+                        <td>
+                            <a href="@autor.FotoURL">@autor.FotoURL</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-success btn-xs" href="/AdminAutor/Edit/@autor.Id">Editar</a>
+                            <a class="btn btn-danger btn-xs" href="/AdminAutor/Delete/@autor.Id">Remover</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

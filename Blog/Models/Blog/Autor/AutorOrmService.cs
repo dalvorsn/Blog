@@ -13,6 +13,11 @@ namespace Blog.Models.Blog.Autor
             this.db = db;
         }
 
+        public AutorEntity Get(int id)
+        {
+            return this.db.Autores.Find(id);
+        }
+
         public List<AutorEntity> GetAll()
         {
             return this.db.Autores.ToList();

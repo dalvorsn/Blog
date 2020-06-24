@@ -13,6 +13,11 @@ namespace Blog.Models.Blog.Categoria
             this.db = db;
         }
 
+        public CategoriaEntity Get(int id)
+        {
+            return this.db.Categorias.Find(id);
+        }
+
         public List<CategoriaEntity> GetAll()
         {
             return this.db.Categorias.ToList();

@@ -2,7 +2,7 @@ using Blog.Models.Blog.Autor;
 using Blog.Models.Blog.Categoria;
 using Blog.Models.Blog.Etiqueta;
 using Blog.Models.Blog.Postagem;
-using Blog.Models.ControleAcesso;
+using Blog.Models.ControleDeAcesso;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -36,10 +36,17 @@ namespace Blog
             services.AddIdentity<Usuario, Papel>(options => {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequiredLength = 6;
-            }).AddEntityFrameworkStores<Database>();
+            }).AddEntityFrameworkStores<Database>()
+                .AddErrorDescriber<DescritorDeErros>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/acesso/login";
+            });
 
             services.AddDbContext<Database>();
 
+            services.AddTransient<ControleDeAcessoService>();
             services.AddTransient<CategoriaOrmService>();
             services.AddTransient<PostagemOrmService>();
             services.AddTransient<AutorOrmService>();
@@ -87,12 +94,18 @@ namespace Blog
 
                 endpoints.MapControllerRoute(
                     name: "admin.autor",
-                    pattern: "{controller=AdminAutorController}/{action=Index}/{id?}"
+                    pattern: "{controller=AdminAutor}/{action=Index}/{id?}"
                 );
 
                 endpoints.MapControllerRoute(
                     name: "admin.postagem",
-                    pattern: "{controller=AdminPostagemController}/{action=Index}/{id?}"
+                    pattern: "{controller=AdminPostagem}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "controleDeAcesso",
+                    pattern: "acesso/{action}",
+                    defaults: new { controller = "ControleDeAcesso", action = "Login" }
                 );
             });
         }

@@ -1,1 +1,37 @@
-﻿AdminEtiqueta Index
+﻿@using Blog.ViewModels.Admin
+@model Blog.ViewModels.Admin.AdminEtiquetasListarViewModel
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Listagem de Etiquetas</h3>
+    </div>
+    <div class="card-body">
+        <a class="btn btn-primary mb-3" href="/AdminEtiqueta/Create">Criar nova Etiqueta</a>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Cor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (EtiquetaAdminEtiquetas etiqueta in @Model.Etiquetas)
+                {
+                <tr>
+                    <td>@etiqueta.Id</td>
+                    <td>@etiqueta.Nome</td>
+                    <td><i class="fa fa-square" style="color: @etiqueta.Cor" aria-hidden="true"></i> @etiqueta.Cor</td>
+                    <td>
+                        <a class="btn btn-success btn-xs" href="/AdminEtiqueta/Edit/@etiqueta.Id">Editar</a>
+                        <a class="btn btn-danger btn-xs" href="/AdminEtiqueta/Delete/@etiqueta.Id">Remover</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

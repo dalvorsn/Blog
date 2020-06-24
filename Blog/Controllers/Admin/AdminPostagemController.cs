@@ -1,10 +1,12 @@
 ﻿using Blog.Models.Blog.Postagem;
 using Blog.RequestModels.AdminPostagem;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace Blog.ViewMoldels
 {
+    [Authorize]
     public class AdminPostagemController : Controller
     {
         private readonly Database _context;

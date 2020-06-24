@@ -2,9 +2,12 @@
 using Blog.Models.Blog.Categoria;
 using Blog.RequestModels.AdminCategoria;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using Blog.ViewModels.Admin;
 
 namespace Blog.ViewMoldels
 {
+    [Authorize]
     public class AdminCategoriaController : Controller
     {
         private readonly Database _context;
@@ -18,14 +21,29 @@ namespace Blog.ViewMoldels
 
         // GET: AdminCategoria
         public IActionResult Index()
-        {
-            return View();
+        {   
+            var model = new AdminCategoriasListarViewModel();
+            foreach (var categoria in _categoriaOrmService.GetAll())
+            {
+                model.Categorias.Add(new AdminCategoriasCategoria
+                {
+                    Id = categoria.Id,
+                    Nome = categoria.Nome
+                });
+            }
+
+            return View(model);
         }
 
         // GET: AdminCategoria/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new AdminCategoriasCriarViewModel
+            {
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            return View(model);
         }
 
         // POST: AdminCategoria/Create
@@ -45,9 +63,17 @@ namespace Blog.ViewMoldels
         }
 
         // GET: AdminCategoria/Edit/5
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            return View();
+            var categoria = _categoriaOrmService.Get(id);
+            var model = new AdminCategoriasEditarViewModel
+            {
+                Id = categoria.Id,
+                Nome = categoria.Nome,
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            return View(model);
         }
 
         // POST: AdminCategoria/Edit/5
@@ -68,9 +94,18 @@ namespace Blog.ViewMoldels
         }
 
         // GET: AdminCategoria/Delete/5
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            return View();
+            
+            var categoria = _categoriaOrmService.Get(id);
+            var model = new AdminCategoriasRemoverViewModel
+            {
+                Id = categoria.Id,
+                Nome = categoria.Nome,
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            return View(model);
         }
 
         // POST: AdminCategoria/Delete/5

@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 
-namespace Blog.ViewMoldels.Home
+namespace Blog.ViewModels.Home
 {
-    public class HomeIndexViewModel
+    public class HomeIndexViewModel : ViewModelAreaComum
     {
         public ICollection<PostagemHomeIndex> Postagens { get; set; }
         public ICollection<PostagemMostPopularHomeIndex> PopularPosts { get; set; }
         
 
         public HomeIndexViewModel() {
+            TituloPagina = "Home";
             Postagens = new List<PostagemHomeIndex>();
             PopularPosts = new List<PostagemMostPopularHomeIndex>();
         }

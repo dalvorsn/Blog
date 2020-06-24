@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Blog.Models;
 using System.Linq;
-using Blog.ViewMoldels.Home;
+using Blog.ViewModels.Home;
 using Blog.Models.Blog.Categoria;
 using Blog.Models.Blog.Postagem;
 

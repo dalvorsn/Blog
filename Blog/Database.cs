@@ -4,13 +4,14 @@ using Blog.Models.Blog.Etiqueta;
 using Blog.Models.Blog.Postagem;
 using Blog.Models.Blog.Postagem.Revisao;
 using Blog.Models.Blog.Postagem.Revisao.Classificacao;
+using Blog.Models.ControleDeAcesso;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace Blog
 {
-    public class Database : IdentityDbContext
+    public class Database : IdentityDbContext<Usuario, Papel, string>
     {
         public DbSet<PostagemEntity> Postagems { get; set; }
         public DbSet<EtiquetaEntity> Etiquetas { get; set; }

@@ -14,6 +14,11 @@ namespace Blog.Models.Blog.Etiqueta
             this.db = db;
         }
 
+        public EtiquetaEntity Get(int id)
+        {
+            return this.db.Etiquetas.Find(id);
+        }
+
         public List<EtiquetaEntity> GetAll()
         {
             return this.db.Etiquetas.ToList();

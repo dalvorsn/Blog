@@ -2,9 +2,12 @@
 using System;
 using Blog.Models.Blog.Autor;
 using Blog.RequestModels.AdminAutor;
+using Microsoft.AspNetCore.Authorization;
+using Blog.ViewModels.Admin;
 
 namespace Blog.ViewMoldels
 {
+    [Authorize]
     public class AdminAutorController : Controller
     {
         private readonly Database _context;
@@ -19,13 +22,29 @@ namespace Blog.ViewMoldels
         // GET: AdminAutor
         public IActionResult Index()
         {
-            return View();
+            var model = new AdminAutoresListarViewModel();
+            foreach( var autor in _autorOrmService.GetAll())
+            {
+                model.Autores.Add(new AdminAutoresAutor
+                {
+                    Id = autor.Id,
+                    Nome = autor.Nome,
+                    FotoURL = autor.FotoURL
+                });
+            }
+            
+            return View(model);
         }
 
         // GET: AdminAutor/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new AdminAutoresCriarViewModel
+            {
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            return View(model);
         }
 
         // POST: AdminAutor/Create
@@ -46,9 +65,18 @@ namespace Blog.ViewMoldels
         }
 
         // GET: AdminAutor/Edit/5
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            return View();
+            var autor = _autorOrmService.Get(id);
+            var model = new AdminAutoresEditarViewModel
+            {
+                Id = autor.Id,
+                Nome = autor.Nome,
+                FotoURL = autor.FotoURL,
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            return View(model);
         }
 
         // POST: AdminAutor/Edit/5
@@ -70,9 +98,17 @@ namespace Blog.ViewMoldels
         }
 
         // GET: AdminAutor/Delete/5
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            return View();
+            var autor = _autorOrmService.Get(id);
+            var model = new AdminAutoresRemoverViewModel
+            {
+                Id = autor.Id,
+                Nome = autor.Nome,
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            return View(model);
         }
 
         // POST: AdminAutor/Delete/5

@@ -2,9 +2,12 @@
 using System;
 using Blog.Models.Blog.Etiqueta;
 using Blog.RequestModels.AdminEtiqueta;
+using Microsoft.AspNetCore.Authorization;
+using Blog.ViewModels.Admin;
 
 namespace Blog.ViewMoldels
 {
+    [Authorize]
     public class AdminEtiquetaController : Controller
     {
         private readonly Database _context;
@@ -19,13 +22,29 @@ namespace Blog.ViewMoldels
         // GET: AdminEtiqueta
         public IActionResult Index()
         {
-            return View();
+            var model = new AdminEtiquetasListarViewModel();
+            
+            foreach(var e in _EtiquetaOrmService.GetAll())
+            {
+                var etiqueta = new EtiquetaAdminEtiquetas();
+                etiqueta.Id = e.Id;
+                etiqueta.Nome = e.Nome;
+                etiqueta.Cor = e.Cor;
+
+                model.Etiquetas.Add(etiqueta);
+            }
+
+            return View(model);
         }
 
         // GET: AdminEtiqueta/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new AdminEtiquetasCriarViewModel
+            {
+                Erro = (string)TempData["erro-msg"]
+            };
+            return View(model);
         }
 
         // POST: AdminEtiqueta/Create
@@ -49,9 +68,18 @@ namespace Blog.ViewMoldels
         }
 
         // GET: AdminEtiqueta/Edit/5
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            return View();
+            var etiqueta = _EtiquetaOrmService.Get(id);
+            var model = new AdminEtiquetasEditarViewModel
+            {
+                Id = etiqueta.Id,
+                Nome = etiqueta.Nome,
+                Cor = etiqueta.Cor,
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            return View(model);
         }
 
         // POST: AdminEtiqueta/Edit/5
@@ -76,9 +104,18 @@ namespace Blog.ViewMoldels
         }
 
         // GET: AdminEtiqueta/Delete/5
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            return View();
+            var etiqueta = _EtiquetaOrmService.Get(id);
+            var model = new AdminEtiquetasRemoverViewModel
+            {
+                Id = etiqueta.Id,
+                Nome = etiqueta.Nome,
+                Cor = etiqueta.Cor,
+                Erro = (string)TempData["erro-msg"]
+        };
+
+            return View(model);
         }
 
         // POST: AdminEtiqueta/Delete/5
