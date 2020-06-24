@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blog.Models.Blog.Postagem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,43 @@ namespace Blog.Models.Blog.Etiqueta
         public EtiquetaOrmService(Database db)
         {
             this.db = db;
+        }
+
+        public async Task<int> VincularEtiquetaPostagem(int id, int postagemId)
+        {
+            var etiqueta = this.db.Etiquetas.Find(id);
+            if (etiqueta == null)
+                throw new Exception("Etiqueta não encontrada!");
+
+            var postagem = this.db.Postagems.Find(postagemId);
+            if (postagem == null)
+                throw new Exception("Postagem não encontrada!");
+
+            this.db.PostagemEtiquetas.Add(new PostagemEtiquetaEntity
+            {
+                Postagem = postagem,
+                Etiqueta = etiqueta
+            });
+
+            return await db.SaveChangesAsync();
+        }
+
+        public async Task<int> DesvincularEtiquetaPostagem(int id, int postagemId)
+        {
+            var etiqueta = this.db.Etiquetas.Find(id);
+            if (etiqueta == null)
+                throw new Exception("Etiqueta não encontrada!");
+
+            var postagem = this.db.Postagems.Find(postagemId);
+            if (postagem == null)
+                throw new Exception("Postagem não encontrada!");
+
+            var entity = this.db.PostagemEtiquetas.Where(ep => ep.EtiquetaId == id && ep.PostagemId == postagemId).First();
+            if (entity == null)
+                throw new Exception("Vinculo não não encontrada!");
+
+            this.db.PostagemEtiquetas.Remove(entity);
+            return await db.SaveChangesAsync();
         }
 
         public EtiquetaEntity Get(int id)

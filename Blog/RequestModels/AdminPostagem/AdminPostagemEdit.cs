@@ -1,4 +1,6 @@
-﻿namespace Blog.RequestModels.AdminPostagem
+﻿using System.Collections.Generic;
+
+namespace Blog.RequestModels.AdminPostagem
 {
     public class AdminPostagemEdit
     {
@@ -8,5 +10,6 @@
         public int CategoriaId { get; set; }
         public string UrlCapa { get; set; }
         public string Texto { get; set; }
+        public List<int> Etiquetas { get; set; }
     }
 }

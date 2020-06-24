@@ -1,4 +1,5 @@
-﻿using Blog.Models.Blog.Postagem.Revisao;
+﻿using Blog.Models.Blog.Etiqueta;
+using Blog.Models.Blog.Postagem.Revisao;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,24 @@ namespace Blog.Models.Blog.Postagem
     public class PostagemOrmService
     {
         private readonly Database db;
-        public PostagemOrmService(Database database)
+        private readonly RevisaoOrmService _revisaoOrmService;
+        private readonly EtiquetaOrmService _etiquetaOrmService;
+        public PostagemOrmService(Database database, RevisaoOrmService revisaoOrmService, EtiquetaOrmService etiquetaOrmService)
         {
             this.db = database;
+            _revisaoOrmService = revisaoOrmService;
+            _etiquetaOrmService = etiquetaOrmService;
+        }
+
+        public PostagemEntity Get(int id)
+        {
+            return this.db.Postagems
+               .Include(c => c.Categoria)
+               .Include(r => r.Revisoes)
+               .Include(a => a.Autor)
+               .Include(e => e.PostagemEtiquetas)
+               .Where(p => p.Id == id)
+               .First();
         }
 
         public int GetUltimaVersaoRevisao(int postagemId)
@@ -54,7 +70,7 @@ namespace Blog.Models.Blog.Postagem
                 .ToList();
         }
 
-        internal PostagemEntity Create(string titulo, int categoriaId, int autorId, string texto, string capa)
+        internal PostagemEntity Create(string titulo, int categoriaId, int autorId, string texto, string capa, List<int> etiquetas)
         {
             var categoria = this.db.Categorias.Find(categoriaId);
             if (categoria == null)
@@ -76,20 +92,14 @@ namespace Blog.Models.Blog.Postagem
             this.db.Postagems.Add(postagem);
             this.db.SaveChanges();
 
-            var revisao = new RevisaoEntity 
-            { 
-                Texto = texto, 
-                Data = DateTime.Now,
-                Versao = 1,
-            };
+            this.AtualizarEtiquetasAsync(postagem.Id, etiquetas).Wait();
 
-            postagem.Revisoes.Add(revisao);
-            this.db.SaveChanges();
+            _revisaoOrmService.AdicionarRevisao(postagem.Id, texto, 1);
 
             return postagem;
         }
 
-        internal PostagemEntity Edit(int id, string titulo, int categoriaId, int autorId, string texto, string capa)
+        internal PostagemEntity Edit(int id, string titulo, int categoriaId, int autorId, string texto, string capa, List<int> etiquetas)
         {
             var postagem = this.db.Postagems.Find(id);
             if(postagem == null)
@@ -108,15 +118,10 @@ namespace Blog.Models.Blog.Postagem
             postagem.AutorId = autorId;
             postagem.UrlCapa = capa;
 
-            var revisao = new RevisaoEntity
-            {
-                Texto = texto,
-                Data = DateTime.Now,
-                Versao = this.GetUltimaVersaoRevisao(id) + 1,
-            };
+            this.AtualizarEtiquetasAsync(postagem.Id, etiquetas).Wait();
 
-            postagem.Revisoes.Add(revisao);
             this.db.SaveChanges();
+            _revisaoOrmService.AdicionarRevisao(postagem.Id, texto, this.GetUltimaVersaoRevisao(id) + 1);
 
             return postagem;
         }
@@ -128,6 +133,42 @@ namespace Blog.Models.Blog.Postagem
                 throw new Exception("Postagem não encontrada.");
 
             this.db.Postagems.Remove(postagem);
+        }
+
+        public async Task AtualizarEtiquetasAsync(int postagemId, List<int> etiquetas)
+        {
+            var postagem = this.db.Postagems.Find(postagemId);
+            if (postagem == null)
+                throw new Exception("Postagem não encontrada.");
+
+            Dictionary<EtiquetaEntity, PostagemEtiquetaEntity> etiquetasSet = new Dictionary<EtiquetaEntity, PostagemEtiquetaEntity>();
+
+            if(postagem.PostagemEtiquetas != null)
+            {
+                foreach (var pe in postagem.PostagemEtiquetas)
+                {
+                    etiquetasSet[pe.Etiqueta] = pe;
+                }
+            }
+            
+            
+            foreach(var etiqueta in this.db.Etiquetas)
+            {
+                if(etiquetasSet.ContainsKey(etiqueta))
+                {
+                    if(!etiquetas.Contains(etiqueta.Id))
+                    {
+                        await _etiquetaOrmService.DesvincularEtiquetaPostagem(etiqueta.Id, postagem.Id);
+                    }
+                } 
+                else
+                {
+                    if(etiquetas.Contains(etiqueta.Id))
+                    {
+                        await _etiquetaOrmService.VincularEtiquetaPostagem(etiqueta.Id, postagem.Id);
+                    }
+                }
+            }
         }
     }
 }

@@ -1,8 +1,13 @@
-﻿using Blog.Models.Blog.Postagem;
+﻿using Blog.Models.Blog.Autor;
+using Blog.Models.Blog.Categoria;
+using Blog.Models.Blog.Etiqueta;
+using Blog.Models.Blog.Postagem;
 using Blog.RequestModels.AdminPostagem;
+using Blog.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace Blog.ViewMoldels
 {
@@ -11,23 +16,73 @@ namespace Blog.ViewMoldels
     {
         private readonly Database _context;
         private readonly PostagemOrmService _postagemOrmService;
+        private readonly CategoriaOrmService _categoriaOrmService;
+        private readonly AutorOrmService _autorOrmService;
+        private readonly EtiquetaOrmService _etiquetaOrmService;
 
-        public AdminPostagemController(Database context, PostagemOrmService PostagemOrmService)
+        public AdminPostagemController(Database context, PostagemOrmService PostagemOrmService, CategoriaOrmService CategoriaOrmService, AutorOrmService AutorOrmService, EtiquetaOrmService EtiquetaOrmService)
         {
             _context = context;
             _postagemOrmService = PostagemOrmService;
+            _categoriaOrmService = CategoriaOrmService;
+            _autorOrmService = AutorOrmService;
+            _etiquetaOrmService = EtiquetaOrmService;
         }
 
         // GET: AdminPostagem
         public IActionResult Index()
         {
-            return View();
+            var model = new AdminPostagensListarViewModel();
+            foreach (var post in _postagemOrmService.GetAll())
+            {
+                model.Postagens.Add(
+                new PostagemAdminPostagens
+                {
+                    Id = post.Id,
+                    Titulo = post.Titulo,
+                    Categoria = post.Categoria.Nome,
+                    Autor = post.Autor.Nome
+                });
+            }
+
+            return View(model);
         }
 
         // GET: AdminPostagem/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new AdminPostagensCriarViewModel();
+
+            foreach(var autor in _autorOrmService.GetAll())
+            {
+                model.Autores.Add(new AutorAdminPostagens
+                {
+                    Id = autor.Id,
+                    Nome = autor.Nome
+                });
+            }
+
+            foreach(var categoria in _categoriaOrmService.GetAll())
+            {
+                model.Categorias.Add(new CategoriaAdminPostagens
+                {
+                    Id = categoria.Id,
+                    Nome = categoria.Nome
+                });
+            }
+
+            foreach (var etiqueta in _etiquetaOrmService.GetAll())
+            {
+                model.Etiquetas.Add(new EtiquetaAdminPostagens
+                {
+                    Id = etiqueta.Id,
+                    Nome = etiqueta.Nome
+                });
+            }
+
+            model.Erro = (string)TempData["erro-msg"];
+
+            return View(model);
         }
 
         // POST: AdminPostagem/Create
@@ -35,14 +90,15 @@ namespace Blog.ViewMoldels
         public IActionResult Create(AdminPostagemCreate request)
         {
             var titulo = request.Titulo;
-            var categoria = request.CategoriaId;
-            var autor = request.AutorId;
+            var categoria = request.Categoria;
+            var autor = request.Autor;
             var texto = request.Texto;
-            var capa = request.UrlCapa;
+            var capa = request.Capa;
+            var etiquetas = request.Etiquetas;
 
             try
             {
-                _postagemOrmService.Create(titulo, categoria, autor, texto, capa);
+                _postagemOrmService.Create(titulo, categoria, autor, texto, capa, etiquetas);
             }
             catch (Exception exception)
             {
@@ -53,16 +109,55 @@ namespace Blog.ViewMoldels
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: AdminPostagem/Details/5
-        public IActionResult Details(int? id)
-        {
-            return View();
-        }
-
         // GET: AdminPostagem/Edit/5
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            return View();
+            var model = new AdminPostagensEditarViewModel
+            {
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            foreach (var autor in _autorOrmService.GetAll())
+            {
+                model.Autores.Add(new AutorAdminPostagens
+                {
+                    Id = autor.Id,
+                    Nome = autor.Nome
+                });
+            }
+
+            foreach (var categoria in _categoriaOrmService.GetAll())
+            {
+                model.Categorias.Add(new CategoriaAdminPostagens
+                {
+                    Id = categoria.Id,
+                    Nome = categoria.Nome
+                });
+            }
+
+            foreach (var etiqueta in _etiquetaOrmService.GetAll())
+            {
+                model.Etiquetas.Add(new EtiquetaAdminPostagens
+                {
+                    Id = etiqueta.Id,
+                    Nome = etiqueta.Nome
+                });
+            }
+
+            var postagem = _postagemOrmService.Get(id);
+            model.Id = postagem.Id;
+            model.AutorId = postagem.AutorId;
+            model.CategoriaId = postagem.CategoriaId;
+            model.Titulo = postagem.Titulo;
+            model.Texto = postagem.Revisoes.OrderByDescending(r => r.Versao).Last().Texto;
+            model.Capa = postagem.UrlCapa;
+
+            foreach(var etiqueta in postagem.PostagemEtiquetas)
+            {
+                model.EtiquetasPostagem.Add(etiqueta.EtiquetaId);
+            }
+
+            return View(model);
         }
 
         // POST: AdminPostagem/Edit/5
@@ -75,10 +170,11 @@ namespace Blog.ViewMoldels
             var autor = request.AutorId;
             var texto = request.Texto;
             var capa = request.UrlCapa;
+            var etiquetas = request.Etiquetas;
 
             try
             {
-                _postagemOrmService.Edit(id, titulo, categoria, autor, texto, capa);
+                _postagemOrmService.Edit(id, titulo, categoria, autor, texto, capa, etiquetas);
             }
             catch (Exception exception)
             {

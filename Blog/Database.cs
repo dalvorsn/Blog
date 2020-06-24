@@ -32,6 +32,7 @@ namespace Blog
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<PostagemEtiquetaEntity>().HasKey(pe => new { pe.EtiquetaId, pe.PostagemId });
+            
         }
 
         public void CreateFakeData()
