@@ -186,9 +186,17 @@ namespace Blog.ViewMoldels
         }
 
         // GET: AdminPostagem/Delete/5
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            return View();
+            var postagem = _postagemOrmService.Get(id);
+            var model = new AdminPostagensRemoverViewModel
+            {
+                Id = postagem.Id,
+                Titulo = postagem.Titulo,
+                Erro = (string)TempData["erro-msg"]
+            };
+
+            return View(model);
         }
 
         // POST: AdminPostagem/Delete/5

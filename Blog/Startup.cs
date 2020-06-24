@@ -28,10 +28,10 @@ namespace Blog
 
             using ( var database = new Database())
             {
-                database.Database.EnsureDeleted();
+                //database.Database.EnsureDeleted();
                 
                 database.Database.EnsureCreated();
-                database.CreateFakeData();
+                //database.CreateFakeData();
             }
 
             services.AddIdentity<Usuario, Papel>(options => {

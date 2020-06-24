@@ -27,6 +27,7 @@ namespace Blog.Models.Blog.Postagem
                .Include(r => r.Revisoes)
                .Include(a => a.Autor)
                .Include(e => e.PostagemEtiquetas)
+               .ThenInclude(post => post.Etiqueta)
                .Where(p => p.Id == id)
                .First();
         }
@@ -92,7 +93,7 @@ namespace Blog.Models.Blog.Postagem
             this.db.Postagems.Add(postagem);
             this.db.SaveChanges();
 
-            this.AtualizarEtiquetasAsync(postagem.Id, etiquetas).Wait();
+            this.AtualizarEtiquetasAsync(postagem.Id, etiquetas);
 
             _revisaoOrmService.AdicionarRevisao(postagem.Id, texto, 1);
 
@@ -118,7 +119,7 @@ namespace Blog.Models.Blog.Postagem
             postagem.AutorId = autorId;
             postagem.UrlCapa = capa;
 
-            this.AtualizarEtiquetasAsync(postagem.Id, etiquetas).Wait();
+            this.AtualizarEtiquetasAsync(postagem.Id, etiquetas);
 
             this.db.SaveChanges();
             _revisaoOrmService.AdicionarRevisao(postagem.Id, texto, this.GetUltimaVersaoRevisao(id) + 1);
@@ -135,9 +136,9 @@ namespace Blog.Models.Blog.Postagem
             this.db.Postagems.Remove(postagem);
         }
 
-        public async Task AtualizarEtiquetasAsync(int postagemId, List<int> etiquetas)
+        public void AtualizarEtiquetasAsync(int postagemId, List<int> etiquetas)
         {
-            var postagem = this.db.Postagems.Find(postagemId);
+            var postagem = this.Get(postagemId);
             if (postagem == null)
                 throw new Exception("Postagem não encontrada.");
 
@@ -158,14 +159,14 @@ namespace Blog.Models.Blog.Postagem
                 {
                     if(!etiquetas.Contains(etiqueta.Id))
                     {
-                        await _etiquetaOrmService.DesvincularEtiquetaPostagem(etiqueta.Id, postagem.Id);
+                        _etiquetaOrmService.DesvincularEtiquetaPostagem(etiqueta.Id, postagem.Id);
                     }
                 } 
                 else
                 {
                     if(etiquetas.Contains(etiqueta.Id))
                     {
-                        await _etiquetaOrmService.VincularEtiquetaPostagem(etiqueta.Id, postagem.Id);
+                        _etiquetaOrmService.VincularEtiquetaPostagem(etiqueta.Id, postagem.Id);
                     }
                 }
             }

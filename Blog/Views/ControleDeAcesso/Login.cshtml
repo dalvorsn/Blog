@@ -22,7 +22,7 @@
         
         <form action="@Url.RouteUrl("controleDeAcesso", new {Action = "Login", RedirectUrl = @Model.Destino})" method="post">
             <div class="input-group mb-3">
-                <input id="usuario" name="usuario" type="email" value="dalvo_rsn@hotmail.com" class="form-control" placeholder="seunome@mail.com.br">
+                <input id="usuario" name="usuario" type="email" class="form-control" placeholder="seunome@mail.com.br">
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-envelope"></span>
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="input-group mb-3">
-                <input id="senha" name="senha" type="password" value="Dalvo!759593" class="form-control">
+                <input id="senha" name="senha" type="password" class="form-control">
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-lock"></span>

@@ -15,7 +15,8 @@ namespace Blog.Models.Blog.Etiqueta
             this.db = db;
         }
 
-        public async Task<int> VincularEtiquetaPostagem(int id, int postagemId)
+
+        public void VincularEtiquetaPostagem(int id, int postagemId)
         {
             var etiqueta = this.db.Etiquetas.Find(id);
             if (etiqueta == null)
@@ -31,10 +32,10 @@ namespace Blog.Models.Blog.Etiqueta
                 Etiqueta = etiqueta
             });
 
-            return await db.SaveChangesAsync();
+            db.SaveChangesAsync();
         }
 
-        public async Task<int> DesvincularEtiquetaPostagem(int id, int postagemId)
+        public void DesvincularEtiquetaPostagem(int id, int postagemId)
         {
             var etiqueta = this.db.Etiquetas.Find(id);
             if (etiqueta == null)
@@ -49,7 +50,7 @@ namespace Blog.Models.Blog.Etiqueta
                 throw new Exception("Vinculo não não encontrada!");
 
             this.db.PostagemEtiquetas.Remove(entity);
-            return await db.SaveChangesAsync();
+            this.db.SaveChanges();
         }
 
         public EtiquetaEntity Get(int id)
