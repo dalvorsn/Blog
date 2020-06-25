@@ -3,6 +3,7 @@ using Blog.Models.Blog.Categoria;
 using Blog.Models.Blog.Etiqueta;
 using Blog.Models.Blog.Postagem;
 using Blog.Models.Blog.Postagem.Revisao;
+using Blog.Models.Blog.Postagem.Revisao.Comentario;
 using Blog.Models.ControleDeAcesso;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +54,7 @@ namespace Blog
             services.AddTransient<AutorOrmService>();
             services.AddTransient<EtiquetaOrmService>();
             services.AddTransient<RevisaoOrmService>();
+            services.AddTransient<ComentarioOrmService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

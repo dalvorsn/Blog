@@ -31,7 +31,7 @@ namespace Blog.ViewModels.Home
                 TimeSpan lastUpdate = DateTime.Now.Subtract(this.UltimaAtualizacao);
                 if (lastUpdate.TotalDays > 0)
                 {
-                    return string.Format("Last updated on {0}", this.UltimaAtualizacao.ToString("MM/dd/YYYY"));
+                    return string.Format("Last updated on {0}", this.UltimaAtualizacao.ToString("MM/dd/yyyy"));
                 }
                 else
                 {

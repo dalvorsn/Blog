@@ -6,6 +6,7 @@ using System.Linq;
 using Blog.ViewModels.Home;
 using Blog.Models.Blog.Categoria;
 using Blog.Models.Blog.Postagem;
+using System;
 
 namespace Blog.Controllers
 {
@@ -33,7 +34,7 @@ namespace Blog.Controllers
                 var revisao = post.Revisoes.FirstOrDefault();
                 if(revisao != null) {
                     postagem.Id = revisao.Id;
-                    postagem.Texto = revisao.Texto;
+                    postagem.Texto = revisao.Texto.Substring(0, Math.Min(500, revisao.Texto.Length));
                     postagem.UltimaAtualizacao = revisao.Data;
                     postagem.Autor = post.Autor;
                     model.Postagens.Add(postagem);
@@ -52,9 +53,16 @@ namespace Blog.Controllers
             return View(model);
         }
 
-        public IActionResult Privacy()
+
+        public IActionResult Details(int id)
         {
-            return View();
+            var postagem = _postagemOrmService.Get(id);
+            var model = new HomeDetailsViewModel();
+            model.Id = postagem.Id;
+            model.Capa = postagem.UrlCapa;
+            model.Titulo = postagem.Titulo;
+            model.Texto = postagem.Revisoes.Last().Texto;
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

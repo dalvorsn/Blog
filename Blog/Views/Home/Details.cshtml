@@ -1,0 +1,17 @@
+﻿@using Blog.ViewModels.Home;
+@model Blog.ViewModels.Home.HomeDetailsViewModel
+    <div class="row">
+        <div class="col-12">
+            <h1><a href="javascript:history.back()"><i class="fa fa-arrow-circle-left text-black-50" aria-hidden="true"></i></a> @Model.Titulo</h1>
+            
+            <div class="card mb-3 w-100">
+                <img src="@Model.Capa" style="max-height: 30vh;" class="card-img-top img-fluid" alt="...">
+                <div class="card-body">
+                    <p class="card-text">
+                        @Model.Texto
+                    </p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
